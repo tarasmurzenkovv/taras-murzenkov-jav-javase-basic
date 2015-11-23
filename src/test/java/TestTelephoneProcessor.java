@@ -36,6 +36,7 @@ public class TestTelephoneProcessor {
                 new Object[]{"+1(202)1235322","+1(802)1235322"},
                 new Object[]{"+44(301)12323457","+44(321)12323457"},
                 new Object[]{"+44(801)12323457","+44(801)12323457"},
+                new Object[]{"",""}
         };
     }
 

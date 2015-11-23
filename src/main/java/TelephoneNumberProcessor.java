@@ -19,6 +19,10 @@ public class TelephoneNumberProcessor {
 
     public String processCityCode(String processedTelephoneNumber) {
 
+        if(StringUtils.isEmpty(processedTelephoneNumber)){
+            return "";
+        }
+
         int positionOfBra = processedTelephoneNumber.indexOf("(") + 1;
         int positionOfKet = processedTelephoneNumber.indexOf(")");
         int telephoneNumberLength = processedTelephoneNumber.length();
