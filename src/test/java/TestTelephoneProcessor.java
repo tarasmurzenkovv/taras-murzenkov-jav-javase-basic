@@ -30,6 +30,14 @@ public class TestTelephoneProcessor {
         };
     }
 
+    private static Object[] processedRawTelephoneNumbers() {
+        return new Object[]{
+                new Object[]{"+7(101)11122211","+7(401)11122211"},
+                new Object[]{"+1(202)1235322","+1(802)1235322"},
+                new Object[]{"+44(301)12323457","+44(321)12323457"},
+                new Object[]{"+44(801)12323457","+44(801)12323457"},
+        };
+    }
 
     @Test
     @Parameters(method = "stringsWithRawTelephoneNumbersAndExpectedRawTelephoneNumbers")
@@ -43,11 +51,23 @@ public class TestTelephoneProcessor {
 
     @Test
     @Parameters(method = "boundaryConditions")
-    public void testBoundaryConditionsForExtractRawTelephoneNumberFromString(String stringWithRawTelephoneNumber, String validRawTelephoneNumber) {
+    public void testBoundaryConditionsForExtractedRawTelephoneNumberFromString(String stringWithRawTelephoneNumber, String validRawTelephoneNumber) {
         telephoneNumberProcessor = new TelephoneNumberProcessor(stringWithRawTelephoneNumber);
         assertEquals(
                 validRawTelephoneNumber,
                 telephoneNumberProcessor.extractTelephoneNumberFromAString(stringWithRawTelephoneNumber)
         );
     }
+
+    @Test
+    @Parameters(method = "boundaryConditions")
+    public void testProcessCountryCodes(String processedRawTelephoneNumber, String validTelephoneNumber) {
+        telephoneNumberProcessor = new TelephoneNumberProcessor(processedRawTelephoneNumber);
+        assertEquals(
+                validTelephoneNumber,
+                telephoneNumberProcessor.processCityCode(processedRawTelephoneNumber)
+        );
+    }
+
+
 }
