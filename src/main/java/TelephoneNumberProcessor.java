@@ -14,26 +14,46 @@ public class TelephoneNumberProcessor {
     }
 
     private String removeSpacesAndCharacters(String rawTelephoneNumber) {
-        return rawTelephoneNumber.replaceAll("[^+()0123456789]","");
+        return rawTelephoneNumber.replaceAll("[^+()0123456789]", "");
     }
 
-    public String processCityCode(String processedTelephoneNumber){
-        String result = null;
+    public String processCityCode(String processedTelephoneNumber) {
 
-        return result;
+        int positionOfBra = processedTelephoneNumber.indexOf("(") + 1;
+        int positionOfKet = processedTelephoneNumber.indexOf(")");
+        int telephoneNumberLength = processedTelephoneNumber.length();
+
+        String cityCode = processedTelephoneNumber.substring(positionOfBra, positionOfKet);
+
+        switch (cityCode) {
+            case "101":
+                cityCode = "401";
+                break;
+            case "202":
+                cityCode = "802";
+                break;
+            case "301":
+                cityCode = "321";
+                break;
+            default:
+                break;
+        }
+
+        return processedTelephoneNumber.substring(0, positionOfBra) + cityCode +
+                processedTelephoneNumber.substring(positionOfKet, telephoneNumberLength);
     }
 
     public String extractTelephoneNumberFromAString(String rawString) {
-        if(rawString.length() >1){
-            if(rawString.contains("@")){
-                rawString = rawString.replaceAll("@","");
-                if(StringUtils.isEmpty(rawString)){
+        if (rawString.length() > 1) {
+            if (rawString.contains("@")) {
+                rawString = rawString.replaceAll("@", "");
+                if (StringUtils.isEmpty(rawString)) {
                     return "";
                 }
                 rawTelephoneNumber = rawString.split("@")[0];
             }
             return removeSpacesAndCharacters(rawTelephoneNumber);
-        }else{
+        } else {
             return "";
         }
     }

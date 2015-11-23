@@ -60,7 +60,7 @@ public class TestTelephoneProcessor {
     }
 
     @Test
-    @Parameters(method = "boundaryConditions")
+    @Parameters(method = "processedRawTelephoneNumbers")
     public void testProcessCountryCodes(String processedRawTelephoneNumber, String validTelephoneNumber) {
         telephoneNumberProcessor = new TelephoneNumberProcessor(processedRawTelephoneNumber);
         assertEquals(
