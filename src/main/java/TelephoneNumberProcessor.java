@@ -13,6 +13,16 @@ public class TelephoneNumberProcessor {
         this.rawTelephoneNumber = rawTelephoneNumber;
     }
 
+    private String removeSpacesAndCharacters(String rawTelephoneNumber) {
+        return rawTelephoneNumber.replaceAll("[^+()0123456789]","");
+    }
+
+    public String processCityCode(String processedTelephoneNumber){
+        String result = null;
+
+        return result;
+    }
+
     public String extractTelephoneNumberFromAString(String rawString) {
         if(rawString.length() >1){
             if(rawString.contains("@")){
@@ -26,10 +36,6 @@ public class TelephoneNumberProcessor {
         }else{
             return "";
         }
-    }
-
-    private String removeSpacesAndCharacters(String rawTelephoneNumber) {
-        return rawTelephoneNumber.replaceAll("[^+()0123456789]","");
     }
 
     public List<TelephoneNumberProcessor> getSortedTelephoneNumbers(List<TelephoneNumberProcessor> unsortedListOfTelephoneNumbers) {
