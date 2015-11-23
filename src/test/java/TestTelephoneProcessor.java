@@ -19,9 +19,14 @@ public class TestTelephoneProcessor {
 
     private static Object[] boundaryConditions() {
         return new Object[]{
+                new Object[]{"", ""},
                 new Object[]{"@", ""},
                 new Object[]{"+1 (102) 123532-2", "+1(102)1235322"},
-                new Object[]{"zip@site.edu; ret@ghjj.org", ""}
+                new Object[]{"zip@site.edu; ret@ghjj.org", ""},
+                new Object[]{"asdfasdfasdfasdfasf", ""},
+                new Object[]{"@@", ""},
+                new Object[]{"+1 (102) 123532-2;;;;;;;;;;;;;;;;;;;;;;", "+1(102)1235322"}
+
         };
     }
 

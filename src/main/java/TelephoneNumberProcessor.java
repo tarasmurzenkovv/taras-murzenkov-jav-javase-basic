@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.List;
 
 /**
@@ -14,6 +16,10 @@ public class TelephoneNumberProcessor {
     public String extractTelephoneNumberFromAString(String rawString) {
         if(rawString.length() >1){
             if(rawString.contains("@")){
+                rawString = rawString.replaceAll("@","");
+                if(StringUtils.isEmpty(rawString)){
+                    return "";
+                }
                 rawTelephoneNumber = rawString.split("@")[0];
             }
             return removeSpacesAndCharacters(rawTelephoneNumber);
