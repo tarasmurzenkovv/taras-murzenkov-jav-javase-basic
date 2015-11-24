@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertEquals;
 
 
@@ -29,7 +28,7 @@ public class TestEmailAddressProcessor {
         expectedResult1.add("def@sdf.org");
 
         List<String> expectedResult2 = new ArrayList<>();
-        expectedResult2.add("some@mail.ru");
+        expectedResult2.add("s@m.ru");
 
         List<String> expectedResult3 = new ArrayList<>();
         expectedResult3.add("zip@site.edu");
@@ -41,12 +40,6 @@ public class TestEmailAddressProcessor {
 
                 //new Object[]{"zip@site.edu; ret@ghjj.org", expectedResult3}
         };
-    }
-
-    @Test
-    public void testIsSeparatorCharacter(){
-        emailAddressProcessor = new EmailAddressProcessor(",");
-        assertTrue(emailAddressProcessor.isSeparatorCharacter(" "));
     }
 
     @Test

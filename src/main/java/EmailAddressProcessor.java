@@ -26,12 +26,13 @@ public class EmailAddressProcessor {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i <= rawString.length()-1; i++) {
             String s = rawString.substring(i, i + 1);
-            if (isSeparatorCharacter(s) ||(i+1 == rawString.length())) {
-                emails.add(stringBuilder.toString());
-                stringBuilder = new StringBuilder();
-            }
+            boolean toAdd = isSeparatorCharacter(s) || ((i+1) == rawString.length());
             if(!isSeparatorCharacter(s)){
                 stringBuilder.append(s);
+            }
+            if (toAdd) {
+                emails.add(stringBuilder.toString());
+                stringBuilder = new StringBuilder();
             }
         }
         return emails;
