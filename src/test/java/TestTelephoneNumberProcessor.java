@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
-public class TestTelephoneProcessor {
+public class TestTelephoneNumberProcessor {
     private TelephoneNumberProcessor telephoneNumberProcessor;
 
     private static Object[] stringsWithRawTelephoneNumbersAndExpectedRawTelephoneNumbers() {
@@ -25,6 +25,7 @@ public class TestTelephoneProcessor {
                 new Object[]{"zip@site.edu; ret@ghjj.org", ""},
                 new Object[]{"asdfasdfasdfasdfasf", ""},
                 new Object[]{"@@", ""},
+                new Object[]{"+1(203)","+1(203)"},
                 new Object[]{"+1 (102) 123532-2;;;;;;;;;;;;;;;;;;;;;;", "+1(102)1235322"}
 
         };

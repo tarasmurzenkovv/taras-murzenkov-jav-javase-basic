@@ -4,6 +4,7 @@ import java.util.List;
 
 /**
  * I assume that each telephone number contains + () and its length is not relevant.
+ * I.e. the following telephone number is valid +1(203)
  */
 
 public class TelephoneNumberProcessor {
@@ -50,11 +51,14 @@ public class TelephoneNumberProcessor {
     public String extractTelephoneNumberFromAString(String rawString) {
         if (rawString.length() > 1) {
             if (rawString.contains("@")) {
-                rawString = rawString.replaceAll("@", "");
-                if (StringUtils.isEmpty(rawString)) {
+                String[] splittedStrings = rawString.split("@");
+                if(splittedStrings.length == 0){
                     return "";
                 }
-                rawTelephoneNumber = rawString.split("@")[0];
+                rawTelephoneNumber = splittedStrings[0];
+                if (StringUtils.isEmpty(rawTelephoneNumber)) {
+                    return "";
+                }
             }
             return removeSpacesAndCharacters(rawTelephoneNumber);
         } else {
