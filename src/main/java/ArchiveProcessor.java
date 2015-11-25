@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 public class ArchiveProcessor {
 
-    public static Set<String> getAllNumbersFromFile(Path path) {
+    public static Set<String> getNumbers(Path path) {
         Set<String> result = new TreeSet<>();
         try (Stream<String> lines = Files.lines(path)) {
             result = lines

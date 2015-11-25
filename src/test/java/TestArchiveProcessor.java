@@ -39,7 +39,7 @@ public class TestArchiveProcessor {
     @Parameters(method = "pathToFileAndExpectedSetOfNumbers")
     public void testExtractFineGrainedTelephoneNumber(String pathToFile, Set<String> expectedOutput){
         Path path = Paths.get(pathToFile);
-        assertEquals(expectedOutput, ArchiveProcessor.getAllNumbersFromFile(path));
+        assertEquals(expectedOutput, ArchiveProcessor.getNumbers(path));
     }
 
     @Test
