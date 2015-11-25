@@ -62,5 +62,4 @@ public class TestEmailAddressProcessor {
         emailAddressProcessor = new EmailAddressProcessor(rawString);
         assertEquals(expectedResult, emailAddressProcessor.extractEmailsList());
     }
-
 }

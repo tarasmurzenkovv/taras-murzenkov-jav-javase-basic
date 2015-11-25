@@ -3,12 +3,6 @@ import junitparams.Parameters;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Set;
-import java.util.TreeSet;
-
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
@@ -58,18 +52,6 @@ public class TestTelephoneNumberProcessor {
         };
     }
 
-    private static Object[] pathToFileAndExpectedSetOfNumbers() {
-        Set<String> expectedSetOfTelephoneNumbers = new TreeSet<>();
-        expectedSetOfTelephoneNumbers.add("");
-        expectedSetOfTelephoneNumbers.add("+1(401)34523452345");
-        expectedSetOfTelephoneNumbers.add("+1(321)");
-        expectedSetOfTelephoneNumbers.add("+4(802)234523");
-
-        return new Object[]{
-                new Object[]{"C:\\AppStore\\dat", expectedSetOfTelephoneNumbers},
-        };
-    }
-
     @Test
     @Parameters(method = "stringsWithRawTelephoneNumbersAndExpectedRawTelephoneNumbers")
     public void testExtractRawTelephoneNumberFromString(String stringWithRawTelephoneNumber, String validRawTelephoneNumber) {
@@ -104,12 +86,5 @@ public class TestTelephoneNumberProcessor {
         assertEquals(
                 expectedTelephoneNumber,
                 telephoneNumberProcessor.extractFineGrainedTelephoneNumber());
-    }
-
-    @Test
-    @Parameters(method = "pathToFileAndExpectedSetOfNumbers")
-    public void testExtractFineGrainedTelephoneNumber(String pathToFile, Set<String> expectedOutput) throws IOException {
-        Path path = Paths.get(pathToFile);
-        assertEquals(expectedOutput, TelephoneNumberProcessor.getAllNumbersFromFile(path));
     }
 }
