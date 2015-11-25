@@ -8,11 +8,9 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
 
-
 @RunWith(JUnitParamsRunner.class)
 public class TestEmailAddressProcessor {
     private EmailAddressProcessor emailAddressProcessor;
-
     private static Object[] stringWithRawEmailAddresses() {
         return new Object[]{
                 new Object[]{"+7 (101) 111-222-11  abc@ert.com, def@sdf.org", "abc@ert.com, def@sdf.org"},
@@ -21,7 +19,6 @@ public class TestEmailAddressProcessor {
                 new Object[]{"+44 (301) 123 23 45 7", ""}
         };
     }
-
     private static Object[] rawEmailsAndExtractedEmails() {
         List<String> expectedResult1 = new ArrayList<>();
         expectedResult1.add("abc@ert.com");
@@ -34,10 +31,20 @@ public class TestEmailAddressProcessor {
         expectedResult3.add("zip@site.edu");
         expectedResult3.add("ret@ghjj.org");
 
+
+        List<String> expectedResult4 = new ArrayList<>();
+        expectedResult4.add("zip@site.edu");
+        expectedResult4.add("ret@ghjj.org");
+        expectedResult4.add("retv@ghjjv.org");
+        expectedResult4.add("reta@ghjja.org");
+
         return new Object[]{
                 new Object[]{"abc@ert.com, def@sdf.org", expectedResult1},
                 new Object[]{"s@m.ru", expectedResult2},
-                new Object[]{"zip@site.edu; ret@ghjj.org", expectedResult3}
+                new Object[]{"zip@site.edu; ret@ghjj.org", expectedResult3},
+                new Object[]{"zip@site.edu  ret@ghjj.org", expectedResult3},
+                new Object[]{"zip@site.edu  ret@ghjj.org;retv@ghjjv.org,reta@ghjja.org", expectedResult4},
+                new Object[]{"", new ArrayList<>()}
         };
     }
 

@@ -8,6 +8,16 @@ public class EmailAddressProcessor {
         this.rawString = rawString;
     }
 
+    private boolean isSeparatorCharacter(String c) {
+        return ",;  ".contains(c);
+    }
+    private boolean addToList(String s, int currentPosition, StringBuilder stringBuilder){
+        return (isSeparatorCharacter(s) || ((currentPosition + 1) == rawString.length()))&&(!"".equals(stringBuilder.toString()));
+    }
+    private boolean addToBuilder(String currentCharacter){
+        return (!isSeparatorCharacter(currentCharacter))&&(!"".equals(currentCharacter));
+    }
+
     public String extractStringWithEmails() {
         int i = 0;
 
@@ -21,20 +31,16 @@ public class EmailAddressProcessor {
         return rawString.substring(i);
     }
 
-    public boolean isSeparatorCharacter(String c) {
-        return ",;  ".contains(c);
-    }
-
     public List<String> extractEmailsList() {
         List<String> emails = new ArrayList<>();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i <= rawString.length() - 1; i++) {
             String s = rawString.substring(i, i + 1);
-            boolean toAdd = isSeparatorCharacter(s) || ((i + 1) == rawString.length());
-            if (!isSeparatorCharacter(s)) {
+
+            if (addToBuilder(s)) {
                 stringBuilder.append(s);
             }
-            if (toAdd) {
+            if (addToList(s,i,stringBuilder)) {
                 emails.add(stringBuilder.toString());
                 stringBuilder = new StringBuilder();
             }
