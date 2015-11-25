@@ -1,5 +1,5 @@
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class EmailAddressProcessor {
     private String rawString;
@@ -8,19 +8,8 @@ public class EmailAddressProcessor {
         this.rawString = rawString;
     }
 
-    private boolean isSeparatorCharacter(String c) {
-        return ",;  ".contains(c);
-    }
-    private boolean addToList(String s, int currentPosition, StringBuilder stringBuilder){
-        return (isSeparatorCharacter(s) || ((currentPosition + 1) == rawString.length()))&&(!"".equals(stringBuilder.toString()));
-    }
-    private boolean addToBuilder(String currentCharacter){
-        return (!isSeparatorCharacter(currentCharacter))&&(!"".equals(currentCharacter));
-    }
-
     public String extractStringWithEmails() {
         int i = 0;
-
         do {
             i++;
             if (i == rawString.length()) {
@@ -31,20 +20,45 @@ public class EmailAddressProcessor {
         return rawString.substring(i);
     }
 
-    public List<String> extractEmailsList() {
-        List<String> emails = new ArrayList<>();
+    /**
+     * @return sorted unique emails
+     */
+    public Set<String> extractEmailsList() {
+        Set<String> emails = new TreeSet<>();
         StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i <= rawString.length() - 1; i++) {
+        for (int i = 0; i < rawString.length(); i++) {
             String s = rawString.substring(i, i + 1);
-
             if (addToBuilder(s)) {
                 stringBuilder.append(s);
             }
-            if (addToList(s,i,stringBuilder)) {
-                emails.add(stringBuilder.toString());
+            if (addToList(s, i, stringBuilder)) {
+                String extractedEmail = stringBuilder.toString();
+                if(isOrgDomain(extractedEmail)){
+                    emails.add(extractedEmail);
+                }
                 stringBuilder = new StringBuilder();
             }
         }
         return emails;
     }
+
+    private boolean isOrgDomain(String validEmailAddress){
+        String[] parts = validEmailAddress.split("\\.");
+        String domain = parts[1];
+        return "org".equals(domain);
+    }
+
+    private boolean isSeparatorCharacter(String c) {
+        return ",;  ".contains(c);
+    }
+
+    private boolean addToList(String s, int currentPosition, StringBuilder stringBuilder) {
+        return (isSeparatorCharacter(s) || ((currentPosition + 1) == rawString.length())) && (!"".equals(stringBuilder.toString()));
+    }
+
+    private boolean addToBuilder(String currentCharacter) {
+
+        return (!isSeparatorCharacter(currentCharacter)) && (!"".equals(currentCharacter));
+    }
+
 }
