@@ -41,14 +41,23 @@ public class TestTelephoneNumberProcessor {
         };
     }
 
+    private static Object[] integratedData() {
+        return new Object[]{
+                new Object[]{"+7 (101) 111-222-11  abc@ert.com, def@sdf.org","+7(401)11122211"},
+                new Object[]{"+1 (102) 123532-2 some@mail.ru","+1(102)1235322"},
+                new Object[]{"+44 (301) 123 23 45 7zip@site.edu; ret@ghjj.org","+44(321)12323457"},
+                new Object[]{"+1 (102) 123532-2;;;;;;;;;;;;;;;;;;;;;;", "+1(102)1235322"},
+                new Object[]{"",""}
+        };
+    }
+
     @Test
     @Parameters(method = "stringsWithRawTelephoneNumbersAndExpectedRawTelephoneNumbers")
     public void testExtractRawTelephoneNumberFromString(String stringWithRawTelephoneNumber, String validRawTelephoneNumber) {
         telephoneNumberProcessor = new TelephoneNumberProcessor(stringWithRawTelephoneNumber);
         assertEquals(
                 validRawTelephoneNumber,
-                telephoneNumberProcessor.extractTelephoneNumberFromAString(stringWithRawTelephoneNumber)
-        );
+                telephoneNumberProcessor.extractTelephoneNumberFromAString(stringWithRawTelephoneNumber));
     }
 
     @Test
@@ -57,8 +66,7 @@ public class TestTelephoneNumberProcessor {
         telephoneNumberProcessor = new TelephoneNumberProcessor(stringWithRawTelephoneNumber);
         assertEquals(
                 validRawTelephoneNumber,
-                telephoneNumberProcessor.extractTelephoneNumberFromAString(stringWithRawTelephoneNumber)
-        );
+                telephoneNumberProcessor.extractTelephoneNumberFromAString(stringWithRawTelephoneNumber));
     }
 
     @Test
@@ -67,9 +75,15 @@ public class TestTelephoneNumberProcessor {
         telephoneNumberProcessor = new TelephoneNumberProcessor(processedRawTelephoneNumber);
         assertEquals(
                 validTelephoneNumber,
-                telephoneNumberProcessor.processCityCode(processedRawTelephoneNumber)
-        );
+                telephoneNumberProcessor.processCityCode(processedRawTelephoneNumber));
     }
 
-
+    @Test
+    @Parameters(method = "integratedData")
+    public void testExtractFinegrainedTelephoneNumber(String rawString, String expectedTelephoneNumber){
+        telephoneNumberProcessor = new TelephoneNumberProcessor(rawString);
+        assertEquals(
+                expectedTelephoneNumber,
+                telephoneNumberProcessor.extractFinegrainedTelephoneNumber());
+    }
 }

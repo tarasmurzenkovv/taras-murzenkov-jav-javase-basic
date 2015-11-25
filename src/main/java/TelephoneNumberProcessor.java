@@ -66,6 +66,10 @@ public class TelephoneNumberProcessor {
         }
     }
 
+    public String extractFinegrainedTelephoneNumber(){
+        return processCityCode(extractTelephoneNumberFromAString(rawTelephoneNumber));
+    }
+
     public List<TelephoneNumberProcessor> getSortedTelephoneNumbers(List<TelephoneNumberProcessor> unsortedListOfTelephoneNumbers) {
         return null;
     }

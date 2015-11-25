@@ -35,10 +35,9 @@ public class TestEmailAddressProcessor {
         expectedResult3.add("ret@ghjj.org");
 
         return new Object[]{
-                //new Object[]{"abc@ert.com, def@sdf.org", expectedResult1},
-                new Object[]{"s@m.ru", expectedResult2}//,
-
-                //new Object[]{"zip@site.edu; ret@ghjj.org", expectedResult3}
+                new Object[]{"abc@ert.com, def@sdf.org", expectedResult1},
+                new Object[]{"s@m.ru", expectedResult2},
+                new Object[]{"zip@site.edu; ret@ghjj.org", expectedResult3}
         };
     }
 
