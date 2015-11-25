@@ -39,7 +39,7 @@ public class TestEmailAddressProcessor {
         expectedResult5.add("ret@ghjj.org");
 
         Set<String> expectedResult6 = new TreeSet<>();
-        expectedResult5.add("dan@at.org");
+        expectedResult6.add("dan@at.org");
 
         return new Object[]{
                 new Object[]{"abc@ert.com, def@sdf.org", expectedResult1},

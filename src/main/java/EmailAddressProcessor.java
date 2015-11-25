@@ -50,7 +50,7 @@ public class EmailAddressProcessor {
     }
 
     private boolean isSeparatorCharacter(String c) {
-        return ",;  ".contains(c);
+        return ",;  \t".contains(c);
     }
 
     private boolean addToList(String s, int currentPosition, StringBuilder stringBuilder) {
