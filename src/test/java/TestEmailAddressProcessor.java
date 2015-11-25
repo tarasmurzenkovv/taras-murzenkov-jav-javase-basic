@@ -38,6 +38,9 @@ public class TestEmailAddressProcessor {
         Set<String> expectedResult5 = new TreeSet<>();
         expectedResult5.add("ret@ghjj.org");
 
+        Set<String> expectedResult6 = new TreeSet<>();
+        expectedResult5.add("dan@at.org");
+
         return new Object[]{
                 new Object[]{"abc@ert.com, def@sdf.org", expectedResult1},
                 new Object[]{"s@m.ru", expectedResult2},
@@ -45,6 +48,7 @@ public class TestEmailAddressProcessor {
                 new Object[]{"  ;;,  zip@site.edu  ret@ghjj.org", expectedResult3},
                 new Object[]{"zip@site.edu  ret@ghjj.org;retv@ghjjv.org,reta@ghjja.org", expectedResult4},
                 new Object[]{"zip@site.edu  ret@ghjj.org;zip@site.edu  ret@ghjj.org", expectedResult5},
+                new Object[]{";;;;;\t\t\t;;;;\t\t\t\tdan@at.org smith@hp.com", expectedResult6},
                 new Object[]{"", new TreeSet<>()}
         };
     }

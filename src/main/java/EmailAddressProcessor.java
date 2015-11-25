@@ -26,6 +26,7 @@ public class EmailAddressProcessor {
     public Set<String> extractEmailsList() {
         Set<String> emails = new TreeSet<>();
         StringBuilder stringBuilder = new StringBuilder();
+        System.out.println(rawString);
         for (int i = 0; i < rawString.length(); i++) {
             String s = rawString.substring(i, i + 1);
             if (addToBuilder(s)) {

@@ -23,7 +23,11 @@ public class ArchiveProcessor {
     public static Set<String> getEmails(Path path) {
         Set<String> result = new TreeSet<>();
         try (Stream<String> lines = Files.lines(path)) {
-            lines.forEach(line -> result.addAll(new EmailAddressProcessor(line).extractEmailsList()));
+            lines.forEach(line -> {
+                EmailAddressProcessor emailAddressProcessor = new EmailAddressProcessor(line);
+                String rawEmails = emailAddressProcessor.extractStringWithEmails();
+                result.addAll(new EmailAddressProcessor(rawEmails).extractEmailsList());
+            });
         } catch (IOException e) {
 
         }
