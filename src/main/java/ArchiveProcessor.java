@@ -40,20 +40,4 @@ public class ArchiveProcessor {
         etmPoint.collect();
         return result;
     }
-
-    public static Set<String> getParallelEmails(Path path) {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: getParallelEmails");
-        Set<String> result = new TreeSet<>();
-        try (Stream<String> lines = Files.lines(path).parallel()) {
-            lines.forEach(line -> {
-                EmailAddressProcessor emailAddressProcessor = new EmailAddressProcessor(line);
-                String rawEmails = emailAddressProcessor.extractStringWithEmails();
-                result.addAll(new EmailAddressProcessor(rawEmails).extractEmailsList());
-            });
-        } catch (IOException e) {
-
-        }
-        etmPoint.collect();
-        return result;
-    }
 }

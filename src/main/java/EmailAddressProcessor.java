@@ -14,9 +14,9 @@ public class EmailAddressProcessor {
         this.rawString = rawString;
     }
 
-    private boolean isParOfTelephoneNumber(String character){
+    private boolean isParOfTelephoneNumber(char character) {
         EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: isParOfTelephoneNumber");
-        boolean b = "0123456789+()- ".contains(character);
+        boolean b = "0123456789+()- ".contains(String.valueOf(character));
         etmPoint.collect();
         return b;
     }
@@ -27,13 +27,14 @@ public class EmailAddressProcessor {
         if (StringUtils.isEmpty(rawString)) {
             return "";
         }
-        char[] chars = rawString.toCharArray();
+
+        char[] rawStringCharacters = rawString.toCharArray();
         do {
             i++;
             if (i == rawString.length()) {
                 break;
             }
-        } while (isParOfTelephoneNumber(rawString.substring(i,i+1)));
+        } while (isParOfTelephoneNumber(rawStringCharacters[i]));
         etmPoint.collect();
         return rawString.substring(i);
     }
@@ -71,8 +72,8 @@ public class EmailAddressProcessor {
 
     private boolean isSeparatorCharacter(char character) {
         char[] separatorCharacters = ",;  \t".toCharArray();
-        for (char c: separatorCharacters){
-            if(character == c){
+        for (char c : separatorCharacters) {
+            if (character == c) {
                 return true;
             }
         }
