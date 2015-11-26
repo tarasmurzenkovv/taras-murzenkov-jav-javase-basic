@@ -18,7 +18,9 @@ public class TestEmailAddressProcessor {
                 new Object[]{"+1 (102) 123532-2 some@mail.ru", "some@mail.ru"},
                 new Object[]{"+44 (301) 123 23 45 7zip@site.edu; ret@ghjj.org", "zip@site.edu; ret@ghjj.org"},
                 new Object[]{"+1(234) 2323-33312;;;abc@domain.org",";;;abc@domain.org"},
-                new Object[]{"+44 (301) 123 23 45 7", ""}
+                new Object[]{"+44 (301) 123 23 45 7", ""},
+                new Object[]{"", ""},
+                new Object[]{null, ""}
         };
     }
     private static Object[] rawEmailsAndExtractedEmails() {

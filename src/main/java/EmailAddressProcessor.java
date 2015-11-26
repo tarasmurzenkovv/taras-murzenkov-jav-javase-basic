@@ -1,3 +1,5 @@
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -10,6 +12,9 @@ public class EmailAddressProcessor {
 
     public String extractStringWithEmails() {
         int i = 0;
+        if (StringUtils.isEmpty(rawString)) {
+            return "";
+        }
         do {
             i++;
             if (i == rawString.length()) {
@@ -26,7 +31,6 @@ public class EmailAddressProcessor {
     public Set<String> extractEmailsList() {
         Set<String> emails = new TreeSet<>();
         StringBuilder stringBuilder = new StringBuilder();
-        System.out.println(rawString);
         for (int i = 0; i < rawString.length(); i++) {
             String s = rawString.substring(i, i + 1);
             if (addToBuilder(s)) {
@@ -34,7 +38,7 @@ public class EmailAddressProcessor {
             }
             if (addToList(s, i, stringBuilder)) {
                 String extractedEmail = stringBuilder.toString();
-                if(isOrgDomain(extractedEmail)){
+                if (isOrgDomain(extractedEmail)) {
                     emails.add(extractedEmail);
                 }
                 stringBuilder = new StringBuilder();
@@ -43,7 +47,7 @@ public class EmailAddressProcessor {
         return emails;
     }
 
-    private boolean isOrgDomain(String validEmailAddress){
+    private boolean isOrgDomain(String validEmailAddress) {
         String[] parts = validEmailAddress.split("\\.");
         String domain = parts[1];
         return "org".equals(domain);

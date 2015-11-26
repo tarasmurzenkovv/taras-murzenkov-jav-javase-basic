@@ -25,10 +25,8 @@ public class TestArchiveProcessor {
 
     private static Object[] pathToFileAndExpectedSetOfEmails() {
         Set<String> expectedSetOfTelephoneNumbers = new TreeSet<>();
-        expectedSetOfTelephoneNumbers.add("");
-        expectedSetOfTelephoneNumbers.add("+1(401)34523452345");
-        expectedSetOfTelephoneNumbers.add("+1(321)");
-        expectedSetOfTelephoneNumbers.add("+4(802)234523");
+        expectedSetOfTelephoneNumbers.add("dan@at.org");
+        expectedSetOfTelephoneNumbers.add("wer@t.org");
 
         return new Object[]{
                 new Object[]{"C:\\AppStore\\dat", expectedSetOfTelephoneNumbers},
@@ -45,11 +43,6 @@ public class TestArchiveProcessor {
     @Test
     @Parameters(method = "pathToFileAndExpectedSetOfEmails")
     public void testExtractEmails(String pathToFile,Set<String> expectedOutput){
-        Path path = Paths.get(pathToFile);
-        Set<String> results = ArchiveProcessor.getEmails(path);
-        for (String r:results){
-            System.out.println(r);
-        }
-        //assertEquals(expectedOutput, ArchiveProcessor.getEmails(path));
+        assertEquals(expectedOutput, ArchiveProcessor.getEmails(Paths.get(pathToFile)));
     }
 }
