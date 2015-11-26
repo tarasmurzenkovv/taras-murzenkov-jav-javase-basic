@@ -66,6 +66,7 @@ public class TestArchiveProcessor {
     @Parameters(method = "pathToFileAndExpectedSetOfEmails")
     public void testExtractEmails(Set<String> expectedOutput) {
         assertEquals(expectedOutput, ArchiveProcessor.getEmails(Paths.get(pathToFile)));
+        //assertEquals(expectedOutput, ArchiveProcessor.getParallelEmails(Paths.get(pathToFile)));
         etmMonitor.render(new SimpleTextRenderer());
     }
 }

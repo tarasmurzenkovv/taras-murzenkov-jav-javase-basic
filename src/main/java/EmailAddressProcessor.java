@@ -37,8 +37,9 @@ public class EmailAddressProcessor {
         EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmailsList");
         Set<String> emails = new TreeSet<>();
         StringBuilder stringBuilder = new StringBuilder();
+        char[] stringCharacters = rawString.toCharArray();
         for (int i = 0; i < rawString.length(); i++) {
-            String s = rawString.substring(i, i + 1);
+            String s =String.valueOf(stringCharacters[i]); //rawString.substring(i, i + 1);
             if (addToBuilder(s)) {
                 stringBuilder.append(s);
             }
