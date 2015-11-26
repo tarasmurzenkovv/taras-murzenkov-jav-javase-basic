@@ -46,13 +46,14 @@ public class EmailAddressProcessor {
         EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmailsList");
         Set<String> emails = new TreeSet<>();
         StringBuilder stringBuilder = new StringBuilder();
-        char[] stringCharacters = rawString.toCharArray();
-        for (int i = 0; i < rawString.length(); i++) {
+        String stringWithEmails = this.extractStringWithEmails();
+        char[] stringCharacters = stringWithEmails.toCharArray();
+        for (int i = 0; i < stringCharacters.length; i++) {
             char s = stringCharacters[i];
             if (addToBuilder(s)) {
                 stringBuilder.append(s);
             }
-            if (addToList(s, i, stringBuilder)) {
+            if (addToList(s, i, stringBuilder, stringCharacters.length)) {
                 String extractedEmail = stringBuilder.toString();
                 if (isOrgDomain(extractedEmail)) {
                     emails.add(extractedEmail);
@@ -80,8 +81,8 @@ public class EmailAddressProcessor {
         return false;
     }
 
-    private boolean addToList(char s, int currentPosition, StringBuilder stringBuilder) {
-        return (isSeparatorCharacter(s) || ((currentPosition + 1) == rawString.length())) && (!"".equals(stringBuilder.toString()));
+    private boolean addToList(char s, int currentPosition, StringBuilder stringBuilder, int length) {
+        return (isSeparatorCharacter(s) || ((currentPosition + 1) == length)) && (!"".equals(stringBuilder.toString()));
     }
 
     private boolean addToBuilder(char currentCharacter) {

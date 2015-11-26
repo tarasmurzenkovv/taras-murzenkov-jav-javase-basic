@@ -29,11 +29,7 @@ public class ArchiveProcessor {
         EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: getEmails");
         Set<String> result = new TreeSet<>();
         try (Stream<String> lines = Files.lines(path)) {
-            lines.forEach(line -> {
-                EmailAddressProcessor emailAddressProcessor = new EmailAddressProcessor(line);
-                String rawEmails = emailAddressProcessor.extractStringWithEmails();
-                result.addAll(new EmailAddressProcessor(rawEmails).extractEmailsList());
-            });
+            lines.forEach(line -> result.addAll(new EmailAddressProcessor(line).extractEmailsList()));
         } catch (IOException e) {
 
         }
