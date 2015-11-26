@@ -1,5 +1,11 @@
+import etm.core.configuration.BasicEtmConfigurator;
+import etm.core.configuration.EtmManager;
+import etm.core.monitor.EtmMonitor;
+import etm.core.renderer.SimpleTextRenderer;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -11,6 +17,7 @@ import static junit.framework.TestCase.assertEquals;
 @RunWith(JUnitParamsRunner.class)
 public class TestEmailAddressProcessor {
     private EmailAddressProcessor emailAddressProcessor;
+    private static EtmMonitor etmMonitor;
 
     private static Object[] stringWithRawEmailAddresses() {
         return new Object[]{
@@ -55,6 +62,19 @@ public class TestEmailAddressProcessor {
         };
     }
 
+    @Before
+    public void setUp() {
+        BasicEtmConfigurator.configure();
+        etmMonitor = EtmManager.getEtmMonitor();
+        etmMonitor.start();
+    }
+
+    @After
+    public void tearDown(){
+        etmMonitor.stop();
+    }
+
+
     @Test
     @Parameters(method = "stringWithRawEmailAddresses")
     public void testGetStringWithEmails(String rawString, String expectedResult){
@@ -66,6 +86,8 @@ public class TestEmailAddressProcessor {
     @Parameters(method = "rawEmailsAndExtractedEmails")
     public void testGetStringWithEmails(String rawString, Set<String> expectedResult){
         emailAddressProcessor = new EmailAddressProcessor(rawString);
+
         assertEquals(expectedResult, emailAddressProcessor.extractEmailsList());
+        etmMonitor.render(new SimpleTextRenderer());
     }
 }

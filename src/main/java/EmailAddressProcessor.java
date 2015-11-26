@@ -14,18 +14,26 @@ public class EmailAddressProcessor {
         this.rawString = rawString;
     }
 
+    private boolean isParOfTelephoneNumber(String character){
+        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: isParOfTelephoneNumber");
+        boolean b = "0123456789+()- ".contains(character);
+        etmPoint.collect();
+        return b;
+    }
+
     public String extractStringWithEmails() {
         EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractStringWithEmails");
         int i = 0;
         if (StringUtils.isEmpty(rawString)) {
             return "";
         }
+        char[] chars = rawString.toCharArray();
         do {
             i++;
             if (i == rawString.length()) {
                 break;
             }
-        } while ("0123456789+()- ".contains(rawString.substring(i, i + 1)));
+        } while (isParOfTelephoneNumber(rawString.substring(i,i+1)));
         etmPoint.collect();
         return rawString.substring(i);
     }
@@ -39,7 +47,7 @@ public class EmailAddressProcessor {
         StringBuilder stringBuilder = new StringBuilder();
         char[] stringCharacters = rawString.toCharArray();
         for (int i = 0; i < rawString.length(); i++) {
-            String s =String.valueOf(stringCharacters[i]); //rawString.substring(i, i + 1);
+            char s = stringCharacters[i];
             if (addToBuilder(s)) {
                 stringBuilder.append(s);
             }
@@ -61,17 +69,21 @@ public class EmailAddressProcessor {
         return "org".equals(domain);
     }
 
-    private boolean isSeparatorCharacter(String c) {
-        return ",;  \t".contains(c);
+    private boolean isSeparatorCharacter(char character) {
+        char[] separatorCharacters = ",;  \t".toCharArray();
+        for (char c: separatorCharacters){
+            if(character == c){
+                return true;
+            }
+        }
+        return false;
     }
 
-    private boolean addToList(String s, int currentPosition, StringBuilder stringBuilder) {
+    private boolean addToList(char s, int currentPosition, StringBuilder stringBuilder) {
         return (isSeparatorCharacter(s) || ((currentPosition + 1) == rawString.length())) && (!"".equals(stringBuilder.toString()));
     }
 
-    private boolean addToBuilder(String currentCharacter) {
-
+    private boolean addToBuilder(char currentCharacter) {
         return (!isSeparatorCharacter(currentCharacter)) && (!"".equals(currentCharacter));
     }
-
 }
