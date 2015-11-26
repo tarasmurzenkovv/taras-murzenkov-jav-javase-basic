@@ -1,3 +1,6 @@
+import etm.core.configuration.EtmManager;
+import etm.core.monitor.EtmMonitor;
+import etm.core.monitor.EtmPoint;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Set;
@@ -5,12 +8,14 @@ import java.util.TreeSet;
 
 public class EmailAddressProcessor {
     private String rawString;
+    private static EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
 
     public EmailAddressProcessor(String rawString) {
         this.rawString = rawString;
     }
 
     public String extractStringWithEmails() {
+        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractStringWithEmails");
         int i = 0;
         if (StringUtils.isEmpty(rawString)) {
             return "";
@@ -21,7 +26,7 @@ public class EmailAddressProcessor {
                 break;
             }
         } while ("0123456789+()- ".contains(rawString.substring(i, i + 1)));
-
+        etmPoint.collect();
         return rawString.substring(i);
     }
 
@@ -29,6 +34,7 @@ public class EmailAddressProcessor {
      * @return sorted unique emails
      */
     public Set<String> extractEmailsList() {
+        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmailsList");
         Set<String> emails = new TreeSet<>();
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < rawString.length(); i++) {
@@ -44,6 +50,7 @@ public class EmailAddressProcessor {
                 stringBuilder = new StringBuilder();
             }
         }
+        etmPoint.collect();
         return emails;
     }
 
