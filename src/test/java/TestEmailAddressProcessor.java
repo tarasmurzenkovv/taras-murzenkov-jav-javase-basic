@@ -87,7 +87,14 @@ public class TestEmailAddressProcessor {
     @Parameters(method = "rawEmailsAndExtractedEmails")
     public void testGetStringWithEmails(String rawString, Set<String> expectedResult) {
         emailAddressProcessor = new EmailAddressProcessor(rawString);
+        assertEquals(expectedResult, emailAddressProcessor.extractEmailsList());
+        etmMonitor.render(new SimpleTextRenderer());
+    }
 
+    @Test
+    @Parameters(method = "rawEmailsAndExtractedEmails")
+    public void testAnotherOptions(String rawString, Set<String> expectedResult) {
+        emailAddressProcessor = new EmailAddressProcessor(rawString);
         assertEquals(expectedResult, emailAddressProcessor.extractEmailsList());
         etmMonitor.render(new SimpleTextRenderer());
     }

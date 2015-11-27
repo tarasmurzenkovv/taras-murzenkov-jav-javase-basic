@@ -14,11 +14,37 @@ public class EmailAddressProcessor {
         this.rawString = rawString;
     }
 
-    private boolean isParOfTelephoneNumber(char character) {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: isParOfTelephoneNumber");
-        boolean b = "0123456789+()- ".contains(String.valueOf(character));
+    /**
+     * For each char at string with emails:
+     *
+     * - if it belongs to valid email characters set then add it to string builder;
+     * - if it belongs to separator set of character then extract email from a builder, check the emails domain
+     *   and reset builder.
+     *
+     * @return sorted unique emails
+     */
+    public Set<String> extractEmailsList() {
+        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmailsList");
+        Set<String> emails = new TreeSet<>();
+        StringBuilder stringBuilder = new StringBuilder();
+        String stringWithEmails = this.extractStringWithEmails();
+        char[] stringCharacters = stringWithEmails.toCharArray();
+        int arrayLength = stringCharacters.length;
+        for (int i = 0; i < arrayLength; i++) {
+            char s = stringCharacters[i];
+            if (addToBuilder(s)) {
+                stringBuilder.append(s);
+            }
+            if (addToList(s, i, stringBuilder, arrayLength)) {
+                String extractedEmail = stringBuilder.toString();
+                if (isOrgDomain(extractedEmail)) {
+                    emails.add(extractedEmail);
+                }
+                stringBuilder = new StringBuilder();
+            }
+        }
         etmPoint.collect();
-        return b;
+        return emails;
     }
 
     public String extractStringWithEmails() {
@@ -34,35 +60,9 @@ public class EmailAddressProcessor {
             if (i == rawString.length()) {
                 break;
             }
-        } while (isParOfTelephoneNumber(rawStringCharacters[i]));
+        } while (isPartOfTelephoneNumber(rawStringCharacters[i]));
         etmPoint.collect();
         return rawString.substring(i);
-    }
-
-    /**
-     * @return sorted unique emails
-     */
-    public Set<String> extractEmailsList() {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmailsList");
-        Set<String> emails = new TreeSet<>();
-        StringBuilder stringBuilder = new StringBuilder();
-        String stringWithEmails = this.extractStringWithEmails();
-        char[] stringCharacters = stringWithEmails.toCharArray();
-        for (int i = 0; i < stringCharacters.length; i++) {
-            char s = stringCharacters[i];
-            if (addToBuilder(s)) {
-                stringBuilder.append(s);
-            }
-            if (addToList(s, i, stringBuilder, stringCharacters.length)) {
-                String extractedEmail = stringBuilder.toString();
-                if (isOrgDomain(extractedEmail)) {
-                    emails.add(extractedEmail);
-                }
-                stringBuilder = new StringBuilder();
-            }
-        }
-        etmPoint.collect();
-        return emails;
     }
 
     private boolean isOrgDomain(String validEmailAddress) {
@@ -87,5 +87,12 @@ public class EmailAddressProcessor {
 
     private boolean addToBuilder(char currentCharacter) {
         return (!isSeparatorCharacter(currentCharacter)) && (!"".equals(currentCharacter));
+    }
+
+    private boolean isPartOfTelephoneNumber(char character) {
+        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: isPartOfTelephoneNumber");
+        boolean b = "0123456789+()- ".contains(String.valueOf(character));
+        etmPoint.collect();
+        return b;
     }
 }

@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
@@ -52,19 +53,19 @@ public class TestArchiveProcessor {
     public void tearDown(){
         etmMonitor.stop();
     }
-/*
+
+
     @Test
     @Parameters(method = "pathToFileAndExpectedSetOfNumbers")
     public void testExtractFineGrainedTelephoneNumber(Set<String> expectedOutput) {
         Path path = Paths.get(pathToFile);
         assertEquals(expectedOutput, ArchiveProcessor.getNumbers(path));
-    }*/
+    }
 
     @Test
     @Parameters(method = "pathToFileAndExpectedSetOfEmails")
     public void testExtractEmails(Set<String> expectedOutput) {
         assertEquals(expectedOutput, ArchiveProcessor.getEmails(Paths.get(pathToFile)));
-        //assertEquals(expectedOutput, ArchiveProcessor.getParallelEmails(Paths.get(pathToFile)));
         etmMonitor.render(new SimpleTextRenderer());
     }
 }
