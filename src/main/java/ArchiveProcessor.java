@@ -1,39 +1,82 @@
-import etm.core.configuration.EtmManager;
-import etm.core.monitor.EtmMonitor;
-import etm.core.monitor.EtmPoint;
-
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 public class ArchiveProcessor {
-    private static EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
+    public static Map<ZipEntry, Boolean> files = new HashMap<>();
 
-    public static Set<String> getNumbers(Path path) {
+    public static Set<String> getNumbers(Path path) throws IOException {
+        return Files
+                .lines(path)
+                .map(line -> new TelephoneNumberProcessor(line).extractFineGrainedTelephoneNumber())
+                .collect(Collectors.toSet());
+    }
+
+    public static Set<String> getEmails(Path path) throws IOException {
         Set<String> result = new TreeSet<>();
-        try (Stream<String> lines = Files.lines(path)) {
-            result = lines
-                    .map(line -> new TelephoneNumberProcessor(line).extractFineGrainedTelephoneNumber())
-                    .collect(Collectors.toSet());
-        } catch (IOException e) {
-
-        }
+        Files.lines(path).forEach(line -> new EmailAddressProcessor(line).extractEmailsList());
         return result;
     }
 
-    public static Set<String> getEmails(Path path) {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: getEmails");
-        Set<String> result = new TreeSet<>();
-        try (Stream<String> lines = Files.lines(path)) {
-            lines.forEach(line -> result.addAll(new EmailAddressProcessor(line).extractEmailsList()));
-        } catch (IOException e) {
+    /**
+     * Depth for search algorithm to recursively process a given archive.
+     * @param zipFile
+     */
 
+    // http://stackoverflow.com/questions/981578/how-to-unzip-files-recursively-in-java
+    public static void getListOfFilesFromArchive(ZipFile zipFile) throws IOException {
+        Enumeration entries = zipFile.entries();
+        while (entries.hasMoreElements()){
+            ZipEntry zipEntry = (ZipEntry)entries.nextElement();
+            if(zipEntry.toString().endsWith(".zip")){
+                // How can I get a list of files from the archive? Simply calling getListOfFiles(new ZipFile(zipEntry)) gives me: FileNotFoundException: inputs\--11--\data.zip
+                InputStream stream = zipFile.getInputStream(zipEntry);
+                ZipFile enclosedZipFile = new ZipFile(stream);
+                getListOfFilesFromArchive(new ZipFile(zipEntry.getName()));//gives me: FileNotFoundException: inputs\--11--\data.zip
+            }else{
+
+
+            }
         }
-        etmPoint.collect();
-        return result;
+    }
+
+    static public void extractFolder(String zipFile) throws ZipException, IOException
+    {
+        System.out.println(zipFile);
+        int BUFFER = 2048;
+        File file = new File(zipFile);
+
+        ZipFile zip = new ZipFile(file);
+        String newPath = zipFile.substring(0, zipFile.length() - 4);
+
+        new File(newPath).mkdir();
+        Enumeration zipFileEntries = zip.entries();
+
+        // Process each entry
+        while (zipFileEntries.hasMoreElements())
+        {
+
+            ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
+            String currentEntry = entry.getName();
+            File destFile = new File(newPath, currentEntry);
+            File destinationParent = destFile.getParentFile();
+
+            // create the parent directory structure if needed
+            destinationParent.mkdirs();
+
+            if (!entry.isDirectory()) {
+            }
+
+            if (currentEntry.endsWith(".zip"))
+            {
+                // found a zip file, try to open
+                extractFolder(destFile.getAbsolutePath());
+            }
+        }
     }
 }

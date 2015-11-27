@@ -18,8 +18,10 @@ public class EmailAddressProcessor {
      * For each char at string with emails:
      *
      * - if it belongs to valid email characters set then add it to string builder;
-     * - if it belongs to separator set of character then extract email from a builder, check the emails domain
-     *   and reset builder.
+     * - if it belongs to separator set of character then
+     *                               - extract email from a builder;
+     *                               - check the emails domain. if it is org then add to TreeSet<>();
+     *                               - reset builder.
      *
      * @return sorted unique emails
      */

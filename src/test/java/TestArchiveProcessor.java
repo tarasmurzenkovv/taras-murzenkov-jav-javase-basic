@@ -9,16 +9,19 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.zip.ZipFile;
 
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
 public class TestArchiveProcessor {
     private final static String pathToFile = "C:\\AppStore\\dat";
+    private final static String pathToZipFile = "C:\\AppStore\\inputs.zip";
     private static EtmMonitor etmMonitor;
 
     private static Object[] pathToFileAndExpectedSetOfNumbers() {
@@ -57,15 +60,22 @@ public class TestArchiveProcessor {
 
     @Test
     @Parameters(method = "pathToFileAndExpectedSetOfNumbers")
-    public void testExtractFineGrainedTelephoneNumber(Set<String> expectedOutput) {
+    public void testExtractFineGrainedTelephoneNumber(Set<String> expectedOutput) throws IOException {
         Path path = Paths.get(pathToFile);
         assertEquals(expectedOutput, ArchiveProcessor.getNumbers(path));
     }
 
     @Test
     @Parameters(method = "pathToFileAndExpectedSetOfEmails")
-    public void testExtractEmails(Set<String> expectedOutput) {
+    public void testExtractEmails(Set<String> expectedOutput) throws IOException {
         assertEquals(expectedOutput, ArchiveProcessor.getEmails(Paths.get(pathToFile)));
         etmMonitor.render(new SimpleTextRenderer());
     }
+
+    @Test
+    public void testProcessArchive() throws IOException {
+        ZipFile zipFile = new ZipFile(pathToZipFile);
+        ArchiveProcessor.getListOfFilesFromArchive(zipFile);
+    }
+
 }
