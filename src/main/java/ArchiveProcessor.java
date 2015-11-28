@@ -29,12 +29,14 @@ public class ArchiveProcessor {
      * @param file - zip archive file
      */
 
+    // test for directories
+
     public static void getListOfFilesFromArchive(File file){
         try(ZipFile zipFile = new ZipFile(file)){
             Enumeration entries = zipFile.entries();
             while (entries.hasMoreElements()){
                 ZipEntry zipEntry = (ZipEntry)entries.nextElement();
-                if(zipEntry.toString().endsWith(".zip")){
+                if(zipEntry.toString().endsWith(".zip") || zipEntry.isDirectory()){
                     InputStream inputStream = zipFile.getInputStream(zipEntry);
                     getListOfFilesFromArchive(ArchiveProcessor.createFile(inputStream));
                 }else{
