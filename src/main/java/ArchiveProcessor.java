@@ -25,22 +25,24 @@ public class ArchiveProcessor {
     }
 
     /**
-     * Depth for search algorithm to recursively process a given archive.
+     * Recursively process a given archive.
      * @param file - zip archive file
      */
 
-    // http://stackoverflow.com/questions/981578/how-to-unzip-files-recursively-in-java
-    public static void getListOfFilesFromArchive(File file) throws IOException {
-        ZipFile zipFile = new ZipFile(file);
-        Enumeration entries = zipFile.entries();
-        while (entries.hasMoreElements()){
-            ZipEntry zipEntry = (ZipEntry)entries.nextElement();
-            if(zipEntry.toString().endsWith(".zip")){
-                InputStream inputStream = zipFile.getInputStream(zipEntry);
-                getListOfFilesFromArchive(ArchiveProcessor.createFile(inputStream));
-            }else{
-                System.out.println(zipEntry.toString());
+    public static void getListOfFilesFromArchive(File file){
+        try(ZipFile zipFile = new ZipFile(file)){
+            Enumeration entries = zipFile.entries();
+            while (entries.hasMoreElements()){
+                ZipEntry zipEntry = (ZipEntry)entries.nextElement();
+                if(zipEntry.toString().endsWith(".zip")){
+                    InputStream inputStream = zipFile.getInputStream(zipEntry);
+                    getListOfFilesFromArchive(ArchiveProcessor.createFile(inputStream));
+                }else{
+                    System.out.println(zipEntry.toString());
+                }
             }
+        }catch (IOException e){
+
         }
     }
 
