@@ -9,19 +9,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.zip.ZipFile;
 
 import static junit.framework.TestCase.assertEquals;
 
 @RunWith(JUnitParamsRunner.class)
 public class TestArchiveProcessor {
-    private final static String pathToFile = "C:\\AppStore\\dat";
-    private final static String pathToZipFile = "C:\\AppStore\\inputs.zip";
+    // private final static String pathToFile = "C:\\AppStore\\dat";
+    private final static String pathToFile = "/Users/terance1/Desktop/dat.zip";
+
+    //private final static String pathToZipFile = "C:\\AppStore\\inputs.zip";
+
+    private final static String pathToZipFile = "/Users/terance1/Desktop/dat.zip";
     private static EtmMonitor etmMonitor;
 
     private static Object[] pathToFileAndExpectedSetOfNumbers() {
@@ -53,7 +57,7 @@ public class TestArchiveProcessor {
     }
 
     @After
-    public void tearDown(){
+    public void tearDown() {
         etmMonitor.stop();
     }
 
@@ -74,8 +78,8 @@ public class TestArchiveProcessor {
 
     @Test
     public void testProcessArchive() throws IOException {
-        ZipFile zipFile = new ZipFile(pathToZipFile);
-        ArchiveProcessor.getListOfFilesFromArchive(zipFile);
+        File file = new File(pathToFile);
+        ArchiveProcessor.getListOfFilesFromArchive(file);
     }
 
 }

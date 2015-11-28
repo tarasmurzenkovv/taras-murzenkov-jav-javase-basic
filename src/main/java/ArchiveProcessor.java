@@ -1,10 +1,11 @@
+import org.apache.commons.io.IOUtils;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 public class ArchiveProcessor {
@@ -25,58 +26,28 @@ public class ArchiveProcessor {
 
     /**
      * Depth for search algorithm to recursively process a given archive.
-     * @param zipFile
+     * @param file - zip archive file
      */
 
     // http://stackoverflow.com/questions/981578/how-to-unzip-files-recursively-in-java
-    public static void getListOfFilesFromArchive(ZipFile zipFile) throws IOException {
+    public static void getListOfFilesFromArchive(File file) throws IOException {
+        ZipFile zipFile = new ZipFile(file);
         Enumeration entries = zipFile.entries();
         while (entries.hasMoreElements()){
             ZipEntry zipEntry = (ZipEntry)entries.nextElement();
             if(zipEntry.toString().endsWith(".zip")){
-                // How can I get a list of files from the archive? Simply calling getListOfFiles(new ZipFile(zipEntry)) gives me: FileNotFoundException: inputs\--11--\data.zip
-                InputStream stream = zipFile.getInputStream(zipEntry);
-                ZipFile enclosedZipFile = new ZipFile(stream);
-                getListOfFilesFromArchive(new ZipFile(zipEntry.getName()));//gives me: FileNotFoundException: inputs\--11--\data.zip
+                InputStream inputStream = zipFile.getInputStream(zipEntry);
+                getListOfFilesFromArchive(ArchiveProcessor.createFile(inputStream));
             }else{
-
-
+                System.out.println(zipEntry.toString());
             }
         }
     }
 
-    static public void extractFolder(String zipFile) throws ZipException, IOException
-    {
-        System.out.println(zipFile);
-        int BUFFER = 2048;
-        File file = new File(zipFile);
-
-        ZipFile zip = new ZipFile(file);
-        String newPath = zipFile.substring(0, zipFile.length() - 4);
-
-        new File(newPath).mkdir();
-        Enumeration zipFileEntries = zip.entries();
-
-        // Process each entry
-        while (zipFileEntries.hasMoreElements())
-        {
-
-            ZipEntry entry = (ZipEntry) zipFileEntries.nextElement();
-            String currentEntry = entry.getName();
-            File destFile = new File(newPath, currentEntry);
-            File destinationParent = destFile.getParentFile();
-
-            // create the parent directory structure if needed
-            destinationParent.mkdirs();
-
-            if (!entry.isDirectory()) {
-            }
-
-            if (currentEntry.endsWith(".zip"))
-            {
-                // found a zip file, try to open
-                extractFolder(destFile.getAbsolutePath());
-            }
-        }
+    private static File createFile(InputStream inputStream) throws IOException {
+        File innerFile = File.createTempFile("tmp", "zip");
+        OutputStream outputStream = new FileOutputStream(innerFile);
+        IOUtils.copy(inputStream,outputStream);
+        return innerFile;
     }
 }
