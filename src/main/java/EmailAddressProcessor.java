@@ -3,8 +3,8 @@ import etm.core.monitor.EtmMonitor;
 import etm.core.monitor.EtmPoint;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 public class EmailAddressProcessor {
     private String rawString;
@@ -18,16 +18,16 @@ public class EmailAddressProcessor {
      * For each char at string with emails:
      *
      * - if it belongs to valid email characters set then add it to string builder;
-     * - if it belongs to separator set of character then
+     * - if it belongs to separator set of characters then
      *                               - extract email from a builder;
      *                               - check the emails domain. if it is org then add to TreeSet<>();
      *                               - reset builder.
      *
      * @return sorted unique emails
      */
-    public Set<String> extractEmailsList() {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmailsList");
-        Set<String> emails = new TreeSet<>();
+    public Set<String> extractEmails() {
+        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmails");
+        Set<String> emails = new HashSet<>();
         StringBuilder stringBuilder = new StringBuilder();
         String stringWithEmails = this.extractStringWithEmails();
         char[] stringCharacters = stringWithEmails.toCharArray();
@@ -37,7 +37,7 @@ public class EmailAddressProcessor {
             if (addToBuilder(s)) {
                 stringBuilder.append(s);
             }
-            if (addToList(s, i, stringBuilder, arrayLength)) {
+            if (addToSet(s, i, stringBuilder, arrayLength)) {
                 String extractedEmail = stringBuilder.toString();
                 if (isOrgDomain(extractedEmail)) {
                     emails.add(extractedEmail);
@@ -83,7 +83,7 @@ public class EmailAddressProcessor {
         return false;
     }
 
-    private boolean addToList(char s, int currentPosition, StringBuilder stringBuilder, int length) {
+    private boolean addToSet(char s, int currentPosition, StringBuilder stringBuilder, int length) {
         return (isSeparatorCharacter(s) || ((currentPosition + 1) == length)) && (!"".equals(stringBuilder.toString()));
     }
 
