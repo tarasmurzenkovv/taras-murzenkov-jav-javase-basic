@@ -1,6 +1,3 @@
-import etm.core.configuration.EtmManager;
-import etm.core.monitor.EtmMonitor;
-import etm.core.monitor.EtmPoint;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashSet;
@@ -8,7 +5,6 @@ import java.util.Set;
 
 public class EmailAddressProcessor {
     private String rawString;
-    private static EtmMonitor etmMonitor = EtmManager.getEtmMonitor();
 
     public EmailAddressProcessor(String rawString) {
         this.rawString = rawString;
@@ -26,7 +22,6 @@ public class EmailAddressProcessor {
      * @return sorted unique emails
      */
     public Set<String> extractEmails() {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractEmails");
         Set<String> emails = new HashSet<>();
         StringBuilder stringBuilder = new StringBuilder();
         String stringWithEmails = this.extractStringWithEmails();
@@ -45,12 +40,10 @@ public class EmailAddressProcessor {
                 stringBuilder = new StringBuilder();
             }
         }
-        etmPoint.collect();
         return emails;
     }
 
     public String extractStringWithEmails() {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: extractStringWithEmails");
         int i = 0;
         if (StringUtils.isEmpty(rawString)) {
             return "";
@@ -63,7 +56,6 @@ public class EmailAddressProcessor {
                 break;
             }
         } while (isPartOfTelephoneNumber(rawStringCharacters[i]));
-        etmPoint.collect();
         return rawString.substring(i);
     }
 
@@ -88,13 +80,10 @@ public class EmailAddressProcessor {
     }
 
     private boolean addToBuilder(char currentCharacter) {
-        return (!isSeparatorCharacter(currentCharacter)) && (!"".equals(currentCharacter));
+        return (!isSeparatorCharacter(currentCharacter)) && (!"".equals(String.valueOf(currentCharacter)));
     }
 
     private boolean isPartOfTelephoneNumber(char character) {
-        EtmPoint etmPoint = etmMonitor.createPoint("EmailAddressProcessor: isPartOfTelephoneNumber");
-        boolean b = "0123456789+()- ".contains(String.valueOf(character));
-        etmPoint.collect();
-        return b;
+        return  "0123456789+()- ".contains(String.valueOf(character));
     }
 }

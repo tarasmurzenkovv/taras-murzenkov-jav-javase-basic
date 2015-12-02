@@ -4,6 +4,7 @@ import etm.core.monitor.EtmMonitor;
 import etm.core.renderer.SimpleTextRenderer;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
+import net.lingala.zip4j.exception.ZipException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +30,7 @@ public class TestArchiveProcessor {
     private final static String LARGE_EXTRACTED_FILE = "C:\\AppStore\\dat";
     // the archive that was provided with the task description
     private final static String PATH_TO_ZIP_FILE = "C:\\AppStore\\inputs.zip";
+    private static final String PATH_TO_TXT_FILE = "C:\\AppStore\\file.txt";
 
     // for performance measurement
     private static EtmMonitor etmMonitor;
@@ -54,7 +56,7 @@ public class TestArchiveProcessor {
         };
     }
 
-    private static Object[] expectedSetOfEmailsAndNumbers(){
+    private static Object[] expectedSetOfEmailsAndNumbers() {
         Set<String> expectedEmails = new HashSet<>();
         Set<String> expectedNumbers = new HashSet<>();
 
@@ -126,5 +128,13 @@ public class TestArchiveProcessor {
         ArchiveProcessor.processArchive(file, emails, numbers);
         assertEquals(expectedEmails, emails);
         assertEquals(expectedNumbers, numbers);
+    }
+
+    @Test
+    public void testAppendFileToArchive() throws IOException, ZipException {
+        File zipArchive = new File("C:\\AppStore\\app_desc.zip");
+        File txtFile = new File("C:\\AppStore\\test2.txt");
+
+        ArchiveProcessor.appendFileToArchive(zipArchive, txtFile);
     }
 }
